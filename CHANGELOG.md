@@ -113,7 +113,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Verified
 
 - STATIC build, zero warnings from `main.cpp`/`common/`.
-- Live-client (bacpypes3) wire verification: ReadProperty of the Device and
+- Live-client wire verification: ReadProperty of the Device and
   both Network Port objects directly on each port; Network_Number = 1/2 and
   Network_Number_Quality = configured on the respective ports; WriteProperty
   + readback on Analog Output 1; I-Am-Router-To-Network transmission on both
