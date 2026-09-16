@@ -5,6 +5,67 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed — documentation restructure, single-command build
+
+- **README.md cut down to what this example is.** It now covers only the
+  B-RTR profile, the device this example creates, the BIBBs/services/objects
+  it supports, how to build and run it, and how to verify it. It links to the
+  releases page and to the new TUTORIAL.md/docs/PICS.md near the top. Removed:
+  the "part of the series" / "you can start here" framing, the generic
+  explanation of what a device profile is, the detailed F-MULTIPORT/F-ROUTER
+  narrative (moved to TUTORIAL.md), the "Before you ship" table (moved into
+  `main.cpp` comments), the "Get the code" and "Link mode" sections, the
+  Troubleshooting table (moved to TUTORIAL.md), and the "Objects and
+  properties" section (moved to `docs/PICS.md`).
+- **New [TUTORIAL.md](TUTORIAL.md)** holds the long-form material the README
+  used to carry: extending the example (including the silent-failure warning
+  for adding a second object), the F-MULTIPORT and F-ROUTER walkthroughs
+  (including the router-forwarding limitation, carried over verbatim), what
+  each object type needs the application to serve, who serves what for a
+  representative commandable object, how to review a change against the
+  conformance statement, and troubleshooting.
+- **New [docs/PICS.md](docs/PICS.md)**, a Protocol Implementation Conformance
+  Statement in the ANSI/ASHRAE 135 Annex A shape (product description, profile
+  claimed, BIBBs, services, segmentation, object types, data link layer,
+  address binding, networking options, character sets), with the generated
+  objects-and-properties tables as its penultimate section. Section 9
+  (networking options) spells out precisely what router configuration does
+  and does not do at this stack pin - it does not claim cross-network
+  forwarding works.
+- **`docs/objects.json`'s Device entry now separates `stack` from `accepted`**,
+  matching the shape used across the series: device-wide facts the stack
+  computes (`Object_List`, `Protocol_Version`/`Revision`,
+  `Protocol_Services/Object_Types_Supported`, `Device_Address_Binding`) are
+  now labelled plain `stack` in the generated PICS instead of `stack default,
+  accepted`; the actual stack-configured defaults (APDU limits, segmentation,
+  system status, database revision) stay under `accepted`. Regenerated with
+  `tools/gen-objects-properties.py` - zero ⚠ rows.
+- **Build is `cmake -B build -S .` and nothing else, on every platform.** The
+  documented build no longer calls `tools/build-stack-static.sh`, which lives
+  in the example-series repository and is therefore not available to a
+  customer who downloads this repository on its own, and no longer links a
+  prebuilt STATIC library. The example now builds in the adapter's default
+  SOURCE mode: the stack's sources are compiled into the executable, so there
+  is no library to build first. `CMakeLists.txt`, `AGENTS.md` and the release
+  workflow were updated to match; the workflow no longer builds/caches the
+  STATIC library or carries matrix `lib:` entries, configures without a
+  link-mode flag, asserts `CAS_BACNET_STACK_LINK=SOURCE` (was `STATIC`), sets
+  `"link_mode": "SOURCE"` in the published metrics JSON, and packages
+  `TUTORIAL.md`/`docs/PICS.md` alongside the binary.
+- **The "Before you ship" guidance moved into `main.cpp`**, as a comment next
+  to each constant in the `CHANGE ALL OF THIS BEFORE YOU SHIP` block,
+  including the warning that `DEVICE_NAME` is a compile-time constant here and
+  must be made per-unit configurable (serial number, DIP switches, config
+  file, or a `--deviceName` argument) in a real product, and that the two
+  network numbers must be unique across the whole internetwork like the
+  device instance.
+- **Footprint table now documents the SOURCE-mode build.** The v1.0.0 numbers
+  were measured from a STATIC-linked build; the table now notes that the next
+  release refreshes them under the documented SOURCE build, matching the
+  series convention.
+
 ## [1.0.0] - unreleased
 
 ### Added

@@ -105,18 +105,47 @@ static const char* APP_VERSION = "1.0.0";
 
 // The device instance. BACnet requires this to be configurable, so it defaults
 // to 389018 (docs/colour-table.md) and can be overridden with --deviceID.
+// CHANGE ALL OF THIS BEFORE YOU SHIP: like DEVICE_NAME above, this instance
+// number MUST BE UNIQUE ACROSS THE WHOLE BACNET INTERNETWORK. --deviceID
+// already makes it runtime-configurable; a real product still needs a process
+// (serial number, commissioning step, ...) for assigning a non-colliding value
+// per unit, since the default here is only a placeholder for this example.
 static uint32_t g_deviceInstance = 389018;
 
 // ---- Device identity: CHANGE ALL OF THIS BEFORE YOU SHIP --------------------
+// Every constant in this block is read by clients and shown to the operator in
+// EVERY discovery tool on the network. Left as-is, your product appears on a
+// real site announcing itself as a Chipkin demo. None of it is cosmetic.
+
+// Change to YOUR company's vendor ID, assigned free by ASHRAE:
+// https://bacnet.org/assigned-vendor-ids/ . Must match VENDOR_NAME below.
 static const uint32_t VENDOR_IDENTIFIER = 389;
+
+// This is the device's Object_Name. It MUST BE UNIQUE ACROSS THE WHOLE BACNET
+// INTERNETWORK - two devices with the same Object_Name is a spec violation
+// that every scan tool renders as two perfectly good objects (see TUTORIAL.md's
+// "silent failure" warning for the same failure shape on a per-object level).
+// Here it is a COMPILE-TIME CONSTANT, which is fine for a tutorial but not for
+// a real product: a real device needs a name that is unique PER UNIT, not per
+// firmware build - derive it from a serial number, DIP switches, a config
+// file, or a --deviceName command-line argument, not a hardcoded string.
 static const char* DEVICE_NAME = "Rainbow";
+
+// Change to a description of what YOUR device actually is.
 static const char* DEVICE_DESCRIPTION =
     "Chipkin CAS BACnet Stack example - B-RTR (Router) profile. Demonstrates "
     "DS-RP-B + DS-WP-B + DM-DDB-A + DM-DOB-B + NM-RC-B: a stand-alone BACnet "
     "router forwarding between two BACnet/IP networks, each with its own "
     "Network Port object.";
+
+// Change to YOUR company name - must match VENDOR_IDENTIFIER above.
 static const char* VENDOR_NAME = "Chipkin Automation Systems";
+
+// Change to your product's own model designation.
 static const char* MODEL_NAME = "CAS BACnet Stack Example - B-RTR";
+
+// Change both to your product's REAL firmware / application software
+// versions - these are not the example's own version (APP_VERSION above).
 static const char* FIRMWARE_REVISION = "1.0.0";
 static const char* APPLICATION_SOFTWARE_VERSION = "1.0.0";
 
@@ -144,6 +173,11 @@ static const uint32_t MAX_APDU_LENGTH = 1476;       // BACnet/IP APDU length
 // The BACnet network NUMBERS the two ports directly connect (ASHRAE 135 cl.
 // 6.2.2 numbers a network, distinct from the Network Port OBJECT instance).
 // Configured (not learned), so Network_Number_Quality reports CONFIGURED.
+// CHANGE ALL OF THIS BEFORE YOU SHIP: these two placeholder numbers (1, 2)
+// must become YOUR site's actual network numbers - they must be unique across
+// the whole BACnet internetwork, exactly like the device instance above. A
+// wrong or colliding network number breaks routing for every device on it,
+// not just this one.
 static const uint16_t NETWORK_NUMBER_PORT_1 = 1;
 static const uint16_t NETWORK_NUMBER_PORT_2 = 2;
 
