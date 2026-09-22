@@ -86,6 +86,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <string>
 #include <errno.h>
 #include <stdlib.h>
 
@@ -101,7 +102,7 @@ using namespace CASBACnetStackExampleConstants;
 // 1. Example + device configuration
 // -----------------------------------------------------------------------------
 static const char* APP_NAME = "BACnet B-RTR (Router) Example - C++";
-static const char* APP_VERSION = "1.0.0";
+static const char* APP_VERSION = "1.0.1";
 
 // The device instance. BACnet requires this to be configurable, so it defaults
 // to 389018 (docs/colour-table.md) and can be overridden with --deviceID.
@@ -144,10 +145,11 @@ static const char* VENDOR_NAME = "Chipkin Automation Systems";
 // Change to your product's own model designation.
 static const char* MODEL_NAME = "CAS BACnet Stack Example - B-RTR";
 
-// Change both to your product's REAL firmware / application software
-// versions - these are not the example's own version (APP_VERSION above).
-static const char* FIRMWARE_REVISION = "1.0.0";
-static const char* APPLICATION_SOFTWARE_VERSION = "1.0.0";
+// Firmware_Revision reflects the underlying CAS BACnet Stack's REAL version,
+// built at runtime (once LoadBACnetFunctions() has loaded the stack DLL) from
+// BACnetStack_GetAPI{Major,Minor,Patch,Build}Version() - see main() below.
+// Application_Software_Version is this example's own version: APP_VERSION above.
+static std::string g_firmwareRevision;
 
 // The sensor objects (all instance 1) and their colour names - unchanged from
 // B-SA/B-ASC.
@@ -587,9 +589,9 @@ bool GetPropertyCharString(const uint32_t deviceInstance, const uint16_t objectT
             case PROPERTY_IDENTIFIER_MODEL_NAME:
                 return ReturnCharacterString(MODEL_NAME, value, valueElementCount, maxElementCount, encodingType);
             case PROPERTY_IDENTIFIER_FIRMWARE_REVISION:
-                return ReturnCharacterString(FIRMWARE_REVISION, value, valueElementCount, maxElementCount, encodingType);
+                return ReturnCharacterString(g_firmwareRevision.c_str(), value, valueElementCount, maxElementCount, encodingType);
             case PROPERTY_IDENTIFIER_APPLICATION_SOFTWARE_VERSION:
-                return ReturnCharacterString(APPLICATION_SOFTWARE_VERSION, value, valueElementCount, maxElementCount, encodingType);
+                return ReturnCharacterString(APP_VERSION, value, valueElementCount, maxElementCount, encodingType);
             default:
                 break;
         }
@@ -755,6 +757,14 @@ int main(int argc, char** argv) {
         fprintf(stderr, "Error: failed to load the CAS BACnet Stack: %s\n",
                 CASBACnetStackAdapter_LastError());
         return 1;
+    }
+
+    {
+        char buf[32];
+        snprintf(buf, sizeof(buf), "%u.%u.%u.%u",
+                 BACnetStack_GetAPIMajorVersion(), BACnetStack_GetAPIMinorVersion(),
+                 BACnetStack_GetAPIPatchVersion(), BACnetStack_GetAPIBuildVersion());
+        g_firmwareRevision = buf;
     }
 
     if (CASExampleHelper::HandleHelpAndVersionArgs(argc, argv, APP_NAME, APP_VERSION)) {

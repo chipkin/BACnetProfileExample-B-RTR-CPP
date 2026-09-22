@@ -66,6 +66,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   release refreshes them under the documented SOURCE build, matching the
   series convention.
 
+## [1.0.1] - unreleased
+
+### Fixed
+
+- **`Application_Software_Version` (12) and `Firmware_Revision` (44) were
+  hardcoded and never wired up**, despite a comment flagging the gap
+  ("Change both to your product's REAL firmware / application software
+  versions"). Fixed: `Application_Software_Version` now reads `APP_VERSION`
+  directly (one source of truth, can't drift from `--version`'s own banner).
+  `Firmware_Revision` is now built at runtime from the CAS BACnet Stack's own
+  `BACnetStack_GetAPIMajorVersion()`/`GetAPIMinorVersion()`/
+  `GetAPIPatchVersion()`/`GetAPIBuildVersion()` (the same 4 calls
+  `common/CASExampleHelper.cpp`'s `PrintVersion()` already uses for the
+  startup banner), populated once right after `LoadBACnetFunctions()`
+  succeeds. Code-read verification: `Application_Software_Version` now
+  returns `"1.0.1"`, `Firmware_Revision` now returns the pinned stack's real
+  `major.minor.patch.build` (e.g. `"6.0.21.0"`) instead of the stale
+  hardcoded `"1.0.0"` for both.
+
 ## [1.0.0] - unreleased
 
 ### Added
