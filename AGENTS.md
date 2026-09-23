@@ -74,7 +74,7 @@ Interactive keys while running: `h` help, `q` quit, up/down nudge Analog Input 1
 
 ## Conventions
 
-- Device is named "Rainbow"; objects use the series' colour names; vendor id 389.
+- Device is named "Chipkin Example B-RTR"; objects use the series' colour names; vendor id 389.
 - Implement **only** the services and objects the B-RTR profile requires - but
   expose **every required property** of each object for Protocol_Revision 24.
 - Outputs are **commandable**: store the 16-slot `Priority_Array` +
