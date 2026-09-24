@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - unreleased
+
+### Changed
+
+- **Device renamed from the series' colour placeholder "Rainbow" to "Chipkin
+  Example B-RTR"** so devices from different examples in the series are
+  distinguishable from each other on the same BACnet network - every example
+  previously announced the identical Object_Name "Rainbow", which made two
+  examples on one subnet indistinguishable by name. Sub-object names (Analog
+  Input 1 "Bronze", etc.) are unchanged - only the Device object's name
+  changed. `docs/colour-table.md` (series root) updated to match. APP_VERSION
+  bumped 1.0.1 -> 1.0.2.
+
 ## [Unreleased]
 
 ### Changed — documentation restructure, single-command build
@@ -65,6 +78,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   were measured from a STATIC-linked build; the table now notes that the next
   release refreshes them under the documented SOURCE build, matching the
   series convention.
+
+## [1.0.1] - unreleased
+
+### Fixed
+
+- **`Application_Software_Version` (12) and `Firmware_Revision` (44) were
+  hardcoded and never wired up**, despite a comment flagging the gap
+  ("Change both to your product's REAL firmware / application software
+  versions"). Fixed: `Application_Software_Version` now reads `APP_VERSION`
+  directly (one source of truth, can't drift from `--version`'s own banner).
+  `Firmware_Revision` is now built at runtime from the CAS BACnet Stack's own
+  `BACnetStack_GetAPIMajorVersion()`/`GetAPIMinorVersion()`/
+  `GetAPIPatchVersion()`/`GetAPIBuildVersion()` (the same 4 calls
+  `common/CASExampleHelper.cpp`'s `PrintVersion()` already uses for the
+  startup banner), populated once right after `LoadBACnetFunctions()`
+  succeeds. Code-read verification: `Application_Software_Version` now
+  returns `"1.0.1"`, `Firmware_Revision` now returns the pinned stack's real
+  `major.minor.patch.build` (e.g. `"6.0.21.0"`) instead of the stale
+  hardcoded `"1.0.0"` for both.
 
 ## [1.0.0] - unreleased
 

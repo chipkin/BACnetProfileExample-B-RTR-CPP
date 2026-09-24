@@ -39,7 +39,7 @@ discoverable via **Who-Is / I-Am**. It is the series' canonical example for
 ## The device this example creates
 
 ```
-Device 389018  "Rainbow"   (Vendor 389 - Chipkin Automation Systems)
+Device 389018  "Chipkin Example B-RTR"   (Vendor 389 - Chipkin Automation Systems)
     |
     +-- Analog Input  1       "Bronze"       Present_Value  21.5      (REAL, degrees Celsius; read-only)
     +-- Binary Input  1       "Emerald"      Present_Value  inactive  (0 = inactive / 1 = active; read-only)
@@ -93,7 +93,7 @@ alarming, scheduling, or trending - not required by B-RTR.
 
 | Object type | Instance | Name | Access |
 |-------------|:--------:|------|--------|
-| Device | 389018 | Rainbow | - |
+| Device | 389018 | Chipkin Example B-RTR | - |
 | Analog Input | 1 | Bronze | read-only |
 | Binary Input | 1 | Emerald | read-only |
 | Multi-State Input | 1 | Hot Pink | read-only |
@@ -197,7 +197,7 @@ FYI: Listening for BACnet/IP on UDP port 47809 (Network Port 2).
 TX 21 bytes to 192.168.3.255:47808 (broadcast) (Network Port 1)
 TX 21 bytes to 192.168.3.255:47809 (broadcast) (Network Port 2)
 FYI: I-Am-Router-To-Network broadcast on Network Port 1 (Vermilion): sent; on Network Port 2 (Vermilion 2): sent
-FYI: Device 389018 ("Rainbow") ready. Vendor ID 389. Routing network 1 (Vermilion, UDP 47808) <-> network 2 (Vermilion 2, UDP 47809). Press 'h' for help.
+FYI: Device 389018 ("Chipkin Example B-RTR") ready. Vendor ID 389. Routing network 1 (Vermilion, UDP 47808) <-> network 2 (Vermilion 2, UDP 47809). Press 'h' for help.
 ```
 
 The device listens on UDP **47808** and **47809** by default. Allow both ports
@@ -238,7 +238,7 @@ You need a BACnet client, such as the
 
 1. **Discover on each network independently** - ReadProperty of Device
    `Object_Name` succeeds directly against `127.0.0.1:47808` (network 1) AND
-   `127.0.0.1:47809` (network 2), both returning `"Rainbow"` (DS-RP-B works on
+   `127.0.0.1:47809` (network 2), both returning `"Chipkin Example B-RTR"` (DS-RP-B works on
    both ports).
 2. **Network_Number / Network_Number_Quality** - ReadProperty of Network Port 1's
    `Network_Number` = `1`, `Network_Number_Quality` = `configured`; Network Port
